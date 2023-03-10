@@ -79,7 +79,7 @@ COMMON=$BASE/common.sh
 export COMMON
 . $COMMON
 
-LIST_DIR=${BASE}/Backup
+LIST_DIR=${BASE}/lists
 LIST=${LIST:-backup.lst}
 [ ! -f $LIST ] && LIST=$LIST_DIR/$LIST
 [ ! -f $LIST ] && ERR "Can not found list file: $LIST"
