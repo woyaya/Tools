@@ -17,18 +17,18 @@
 ,/etc/mosquitto,/home/share/Backup/GeminiM,y,
 ,/etc/network,/home/share/Backup/GeminiM,y,
 ,/etc/samba,/home/share/Backup/GeminiM,y,
-,/home/kingwoo/.bash_aliases,/home/share/Backup/GeminiM,y,
-,/home/kingwoo/.gitconfig,/home/share/Backup/GeminiM,y,
-,/home/kingwoo/.tmux.conf,/home/share/Backup/GeminiM,y,
-,/home/kingwoo/.ssh/config,/home/share/Backup/GeminiM,y,
-,/home/kingwoo/.vim,/home/share/Backup/GeminiM,y,
-,/home/kingwoo/.vimrc,/home/share/Backup/GeminiM,y,
+,/home/user/.bash_aliases,/home/share/Backup/GeminiM,y,
+,/home/user/.gitconfig,/home/share/Backup/GeminiM,y,
+,/home/user/.tmux.conf,/home/share/Backup/GeminiM,y,
+,/home/user/.ssh/config,/home/share/Backup/GeminiM,y,
+,/home/user/.vim,/home/share/Backup/GeminiM,y,
+,/home/user/.vimrc,/home/share/Backup/GeminiM,y,
 ,/home/www/dokuwiki/conf,/home/share/Backup/GeminiM,y,
 ,/home/www/dokuwiki/data/pages,/home/share/Backup/GeminiM,y,
 ,/home/www/dokuwiki/data/attic,/home/share/Backup/GeminiM,y,--exclude _dummy
 ,/home/www/dokuwiki/data/media*,/home/share/Backup/GeminiM,y,--exclude _dummy
 ,/home/www/dokuwiki/data/meta,/home/share/Backup/GeminiM,y,--exclude _dummy
-,/home/homeassistant/esphome/*.yaml,/home/share/Backup/GeminiM,y,
-,/home/homeassistant/esphome/SRC,/home/share/Backup/GeminiM,y,
-,/home/homeassistant/hassio,/home/share/Backup/GeminiM,y,--exclude *.db* --exclude *.log* --exclude .git --exclude *backup --exclude test --exclude log --exclude tmp --exclude .storage/auth --exclude .storage/core.restore_state
+,/home/smarthome/esphome/*.yaml,/home/share/Backup/GeminiM,y,
+,/home/smarthome/esphome/SRC,/home/share/Backup/GeminiM,y,
+,/home/smarthome/hassio,/home/share/Backup/GeminiM,y,--exclude *.db* --exclude *.log* --exclude .git --exclude *backup --exclude test --exclude log --exclude tmp --exclude .storage/auth --exclude .storage/core.restore_state
 ,/home/share/Backup/GeminiM,/home/Backup,n,
