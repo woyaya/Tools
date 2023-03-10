@@ -14,18 +14,6 @@
 # username@server   remote_dir    local_dir     relative     rsync_params
 ,/etc/apache2,/home/share/Backup/GeminiM,y,
 ,/etc/docker,/home/share/Backup/GeminiM,y,
-,/etc/mosquitto,/home/share/Backup/GeminiM,y,
-,/etc/network,/home/share/Backup/GeminiM,y,
-,/etc/samba,/home/share/Backup/GeminiM,y,
-,/home/user/.bash_aliases,/home/share/Backup/GeminiM,y,
-,/home/user/.gitconfig,/home/share/Backup/GeminiM,y,
-,/home/user/.tmux.conf,/home/share/Backup/GeminiM,y,
-,/home/user/.ssh/config,/home/share/Backup/GeminiM,y,
-,/home/user/.vim,/home/share/Backup/GeminiM,y,
-,/home/user/.vimrc,/home/share/Backup/GeminiM,y,
-,/home/www/dokuwiki/conf,/home/share/Backup/GeminiM,y,
-,/home/www/dokuwiki/data/pages,/home/share/Backup/GeminiM,y,
-,/home/www/dokuwiki/data/attic,/home/share/Backup/GeminiM,y,--exclude _dummy
 ,/home/www/dokuwiki/data/media*,/home/share/Backup/GeminiM,y,--exclude _dummy
 ,/home/www/dokuwiki/data/meta,/home/share/Backup/GeminiM,y,--exclude _dummy
 ,/home/smarthome/esphome/*.yaml,/home/share/Backup/GeminiM,y,
