@@ -80,9 +80,11 @@ export COMMON
 . $COMMON
 
 LIST_DIR=${BASE}/lists
-LIST=${LIST:-backup.lst}
-[ ! -f $LIST ] && LIST=$LIST_DIR/$LIST
-[ ! -f $LIST ] && ERR "Can not found list file: $LIST"
+list=${LIST:-backup.lst}
+LIST=$list
+[ ! -f $LIST ] && LIST=$LIST_DIR/$list
+[ ! -f $LIST ] && LIST=$BASE/$list
+[ ! -f $LIST ] && ERR "Can not found list file: $list"
 
 check_dirs $SCRIPT_DIR $LIST_DIR || ERR "Incompleted dirs"
 check_execs rsync logger sed awk wc || ERR "Incomplete executes"
