@@ -1,0 +1,20 @@
+# [username@server:]source_dir    [username@server:]dist_dir     rsync_params
+# username@server: user name and server address
+# source_dir: source dir at source server(or local machine if "username@server" is not set
+#	if "source_dir" end with '/': sync with context of source_dir only.
+#	if "source_dir" end without '/': sync with source path and context of the source_dir
+# dist_dir: dist dir
+# rsync_params: additional parameters of rsync
+
+# [username@server:]source_dir    [username@server:]dist_dir     rsync_params
+
+# Backup from local to local, with full path of source
+/path/of/source,/path/of/dist,
+# Backup from local to local, with context of source only
+/path/of/source/,/path/of/dist,
+# Backup from local to local, ignore "*.log" and "*.tmp" files
+/path/of/source,/path/of/dist,--exclude *.log --exclude *.tmp
+# Backup from local to remote, with full path of source
+/path/of/source,test@192.168.1.2:/path/of/dist,
+# Backup from remote to local, with full path of source
+test@192.168.1.2:/path/of/source,/path/of/dist
