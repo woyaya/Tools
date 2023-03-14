@@ -34,6 +34,28 @@ check_src(){
 	[ -z "$list" ] && return 1
 	return 0
 }
+rsync_version(){
+	[ -z "$1" ] && {
+		rsync --version | sed '/version/!d;s/.*version \([0-9]\)\.\([0-9]\).* protocol.*/\1\2/'
+		return
+	}
+	ssh -n $1 'rsync --version 2>/dev/null' | sed '/version/!d;s/.*version \([0-9]\)\.\([0-9]\).* protocol.*/\1\2/'
+}
+atime(){
+	local rversion
+	[ -n "$1" ] && rversion=`rsync_version "$1"` || rversion="$LVERSION"
+	[ -z "$rversion" ] && return 1
+	[ "$rversion" -ge 32 -a "$LVERSION" -ge 32 ] && {
+		echo "--open-noatime"
+		return 0
+	}
+	[ "$rversion" -lt 32 -a "$LVERSION" -lt 32 ] && {
+		echo "--noatime"
+		return 0
+	}
+	#unmatch version, 'atime' is not supported
+	return 0;
+}
 #1: ERR; 2:ERR+WRN; 3:ERR+WRN+INF
 LOG_LEVEL=${LOG_LEVEL:-2}
 LOG2LOGGER=${LOG2LOGGER:-0}
@@ -106,10 +128,17 @@ check_execs rsync logger sed awk wc || ERR "Incomplete executes"
 
 FAIL=""
 SUCC=""
+LVERSION=`rsync_version`
 [ "$LOG_LEVEL" -ge "5" ] && VERBOSE="-v" || VERBOSE="-q"
 [ `whoami` = "root" ] && PRESERVE="-X" || PRESERVE=""
 INF "Read list from $LIST"
+
+
+cat $LIST
+
+
 while read LINE; do
+echo ">>>>>>>>$LINE"
 	DBG "Process line: $LINE"
 	[ -z "$LINE" ] && continue
 	line=`echo "$LINE" | sed 's/^ *//;/^#/d'`
@@ -131,8 +160,8 @@ while read LINE; do
 		continue
 	}
 	# parse variables
-	src_server=`echo "$src" | sed '/@.*:/!d'`
-	dist_server=`echo "$dist" | sed '/@.*:/!d'`
+	src_server=`echo "$src" | sed '/@.*:/!d;s/:.*//'`
+	dist_server=`echo "$dist" | sed '/@.*:/!d;s/:.*//'`
 	[ -n "$src_server" -a -n "$dist_server" ] && {
 		WRN "Cannot both be remote: $src, $dist"
 		FAIL="$FAIL*<$LINE>: Cannot both be remote"
@@ -142,13 +171,13 @@ while read LINE; do
 	#check if 'src' end with '/'
 	backslash=`echo "$src" | sed '/\/$/!d'`
 	[ -n "$backslash" ] && RELATIVE="" || RELATIVE="-R"
-	params="-a $RELATIVE $PRESERVE --noatime $params $VERBOSE"
+	params="-a $RELATIVE $PRESERVE $params $VERBOSE"
 	if [ -n "$src_server" ];then
-		src_param="-zzP -e ssh"
+		src_param="-zzP `atime $src_server` -e ssh"
 		dist_param=""
 		mkdir -p $dist
 	elif [ -n "$dist_server" ];then
-		src_param="-zzP "
+		src_param="-zzP `atime $dist_server`"
 		dist_param="-e ssh"
 		check_src $src || {
 			wrn "invalid source: $src"
@@ -161,7 +190,7 @@ while read LINE; do
 			fail="$fail*<$line>: invalid source: $src"
 			continue
 		}
-		src_param="-HA"
+		src_param="-HA `atime`"
 		dist_param=""
 		mkdir -p $dist
 	fi
