@@ -133,12 +133,7 @@ LVERSION=`rsync_version`
 [ `whoami` = "root" ] && PRESERVE="-X" || PRESERVE=""
 INF "Read list from $LIST"
 
-
-cat $LIST
-
-
 while read LINE; do
-echo ">>>>>>>>$LINE"
 	DBG "Process line: $LINE"
 	[ -z "$LINE" ] && continue
 	line=`echo "$LINE" | sed 's/^ *//;/^#/d'`
