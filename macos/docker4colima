@@ -1,0 +1,115 @@
+#!/bin/bash
+
+NAME=$(basename $0)
+
+usage(){
+	echo "$0 [-T timeout_seconds] docker_params"
+	exit 1
+}
+
+# Function to log messages to the system log
+# macOS's logger command by default sends messages to the info level
+# For more granular levels, you can specify priority using the -p option (facility.level)
+log_message() {
+    local message="$2"
+    local level="${1:-info}" # Default level to info if not specified
+
+    case "$level" in
+        warn)
+            logger -t "$NAME" -p user.warning "$message"
+            ;;
+        error)
+            logger -t "$NAME" -p user.err "$message" # On macOS, user.err is commonly used for error level
+            ;;
+        info|*)
+            logger -t "$NAME" "$message" # Default to info for unknown levels
+            ;;
+    esac
+    echo "$message"
+}
+DBG(){
+	log_message "debug" "$@"
+}
+INFO(){
+	log_message "info" "$@"
+}
+WARN(){
+	log_message "warn" "$@"
+}
+ERR(){
+	log_message "error" "$@"
+}
+
+# --- Main script logic starts ---
+
+INFO "Starting Docker with colima status check..."
+
+# Check if Docker is installed
+if ! command -v docker &> /dev/null; then
+    ERR "Docker is not installed. Please install Docker."
+    # If Docker is not installed, subsequent Colima checks might be pointless, but we continue for completeness.
+    exit 1
+fi
+
+# Check if Colima is installed
+if ! command -v colima &> /dev/null; then
+    ERR "Colima is not installed. Please install Colima."
+    # If Colima is not installed, the Docker runtime environment is incomplete, exiting here.
+    exit 1
+fi
+
+TIMEOUT=0 # Default timeout is 0 seconds
+
+# Parse the first two arguments for -T timeout
+if [ "$1" == "-T" -o "$1" == "--timeout" ]; then
+	if [[ -n "$2" && "$2" =~ ^-?[0-9]+$ ]]; then
+		TIMEOUT="$2"
+		shift 2 # Remove -T and timeout arguments
+		INFO "Custom timeout set: ${TIMEOUT} seconds."
+	else
+		ERR "Invalid timeout time: $2"
+		usage $0
+	fi
+else
+	INFO "No custom timeout specified. Defaulting to 0 seconds."
+fi
+
+# Store the remaining Docker command arguments
+DOCKER_ARGS=("$@")
+
+# Function to check if Colima VM is ready
+# Uses 'colima ssh -- docker info' to ensure connection to Colima's Docker daemon
+check_colima_status() {
+    colima ssh -- docker info > /dev/null 2>&1
+    return $?
+}
+
+# Wait for Colima VM to be ready
+INFO "Checking Colima VM status..."
+
+COLIMA_READY=false # Flag to indicate if Colima is ready
+while true;do
+	if check_colima_status; then
+		INFO "Colima VM is ready"
+		COLIMA_READY=true
+		break
+	fi
+	# check if timeout
+	[ $TIMEOUT -ge 0 ] && {
+		#[ "$TIMEOUT" == "0" ] && break
+		[ "$TIMEOUT" -le "$SECONDS" ] && break
+	}
+	sleep 1
+done
+[ $COLIMA_READY == false ] && {
+	ERR "Colima not ready within $TIMEOUT seconds"
+	exit 1
+}
+INFO "Colima ready, switch context to colima"
+docker context use colima || {
+	ERR "Switch docker context to colima fail"
+	exit 1
+}
+INFO "Everything is ready, execute docker with arguments: ${DOCKER_ARGS[*]}"
+exec docker ${DOCKER_ARGS[*]}
+
