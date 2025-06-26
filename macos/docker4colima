@@ -3,7 +3,15 @@
 NAME=$(basename $0)
 
 usage(){
-	echo "$0 [-T timeout_seconds] docker_params"
+	echo "$0 [script_params] docker_params"
+	echo "script_params: "
+	echo "    -t timeout: waiting for colima ready with 'timeout' seconds"
+	echo "    -T timeout: waiting for colima and docker volume ready with 'timeout' seconds"
+	echo ""
+	echo "timeout:"
+	echo "    0: don't wait, return immediately"
+	echo "    <0: wait forever"
+	echo "    >0: wait at most 'timeout' seconds"
 	exit 1
 }
 
@@ -40,6 +48,50 @@ ERR(){
 	log_message "error" "$@"
 }
 
+parse_docker_volume(){
+	local OPTIONS=v:
+	local LONGOPTIONS=volume:
+	local PARSED_OPTIONS
+	PARSED_OPTIONS=$(getopt -o "$OPTIONS" --long "$LONGOPTIONS" --name "$NAME" -- "$@")
+	[ $? -ne 0 ] && return 1
+
+	eval set -- "$PARSED_OPTIONS"
+	while true; do
+	    case "$1" in
+		-v|--volume)
+			echo -n " $2" | sed 's/:.*//'
+			shift 2
+			;;
+		"") # process end
+			break
+			;;
+		*) # Ignore other params
+			shift # 移动到下一个参数
+			;;
+	    esac
+	done
+}
+
+# Function to check if Colima VM is ready
+# Uses 'colima ssh -- docker info' to ensure connection to Colima's Docker daemon
+colima_is_ready() {
+    local context
+    colima ssh -- docker info > /dev/null 2>&1
+    [ $? != 0 ] && return 1
+    # check docker context for colima ready
+    context=$(docker context ls 2>/dev/null | sed '/colima/!d')
+    [ -z "$context" ] && return 1
+    return 0
+}
+volumes_is_ready(){
+	local v
+	[ $# -eq 0 ] && return 0
+	for v in $@;do
+		[[ ! -e "$v" ]] && return 1
+	done
+	return 0
+}
+
 # --- Main script logic starts ---
 
 INFO "Starting Docker with colima status check..."
@@ -59,11 +111,12 @@ if ! command -v colima &> /dev/null; then
 fi
 
 TIMEOUT=0 # Default timeout is 0 seconds
-
+CHECK_VOLUME=0
 # Parse the first two arguments for -T timeout
-if [ "$1" == "-T" -o "$1" == "--timeout" ]; then
+if [ "$1" == "-T" -o "$1" == "-t" ]; then
 	if [[ -n "$2" && "$2" =~ ^-?[0-9]+$ ]]; then
 		TIMEOUT="$2"
+		[ "$1" == "-T" ] && CHECK_VOLUME=true
 		shift 2 # Remove -T and timeout arguments
 		INFO "Custom timeout set: ${TIMEOUT} seconds."
 	else
@@ -77,23 +130,27 @@ fi
 # Store the remaining Docker command arguments
 DOCKER_ARGS=("$@")
 
-# Function to check if Colima VM is ready
-# Uses 'colima ssh -- docker info' to ensure connection to Colima's Docker daemon
-check_colima_status() {
-    colima ssh -- docker info > /dev/null 2>&1
-    return $?
-}
+# parse docker volumes
+if [ "$CHECK_VOLUME" = "true" ];then 
+	VOLUMES=$(parse_docker_volume ${DOCKER_ARGS[*]})
+	INFO "Docker volume list: $VOLUMES"
+else
+	VOLUMES="" # default skip volume check
+fi
 
 # Wait for Colima VM to be ready
 INFO "Checking Colima VM status..."
 
-COLIMA_READY=false # Flag to indicate if Colima is ready
+READY=false
 while true;do
-	if check_colima_status; then
-		INFO "Colima VM is ready"
-		COLIMA_READY=true
-		break
-	fi
+	colima_ready=0
+	volumes_is_ready $VOLUMES && {
+		colima_is_ready && {
+			INFO "Colima VM and volumes is ready"
+			READY=true
+			break
+		}
+	}
 	# check if timeout
 	[ $TIMEOUT -ge 0 ] && {
 		#[ "$TIMEOUT" == "0" ] && break
@@ -101,11 +158,12 @@ while true;do
 	}
 	sleep 1
 done
-[ $COLIMA_READY == false ] && {
-	ERR "Colima not ready within $TIMEOUT seconds"
+[ $READY == false ] && {
+	ERR "Colima or volume($VOLUMES) not ready within $TIMEOUT seconds"
 	exit 1
 }
-INFO "Colima ready, switch context to colima"
+
+INFO "Colima and volumes ready, switch context to colima"
 docker context use colima || {
 	ERR "Switch docker context to colima fail"
 	exit 1
