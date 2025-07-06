@@ -1,0 +1,137 @@
+#!/bin/sh
+
+NAME=$(basename $0)
+
+USAGE(){
+	echo ""
+	echo "Usage:"
+	echo "  $0 [params]"
+	echo "      params: "
+	echo "        -t timeout: waiting for orbstack ready with 'timeout' seconds"
+	echo "        -u user: run as 'user'."
+	echo "           Note: This only works when the current user is root."
+	echo "    "
+	echo "      timeout:"
+	echo "        0: don't wait, return immediately"
+	echo "        <0: wait forever"
+	echo "        >0: wait at most 'timeout' seconds"
+	exit 1
+}
+
+# Function to log messages to the system log
+# macOS's logger command by default sends messages to the info level
+# For more granular levels, you can specify priority using the -p option (facility.level)
+log_message() {
+    local level="${1:-info}" # Default level to info if not specified
+    shift
+    local message="$@"
+
+    case "$level" in
+        warn)
+            logger -t "$NAME" -p user.warning "$message"
+            ;;
+        error)
+            logger -t "$NAME" -p user.err "$message" # On macOS, user.err is commonly used for error level
+            ;;
+        info|*)
+            logger -t "$NAME" "$message" # Default to info for unknown levels
+            ;;
+    esac
+    echo "$message"
+}
+DBG(){
+	log_message "debug" "$@"
+}
+INFO(){
+	log_message "info" "$@"
+}
+WRN(){
+	log_message "warn" "$@"
+}
+ERR(){
+	log_message "error" "$@"
+}
+
+# Function to check if orbstack is ready
+orbstack_is_ready() {
+    local context
+    context=$(orb status 2>/dev/null)
+    [ "$context" == "Running" ] && return 0
+    return 1
+}
+
+# --- Main script logic starts ---
+
+# Check if orbstack is installed
+if ! command -v orb &> /dev/null; then
+    ERR "Orbstack is not installed. Please install it first."
+    exit 1
+fi
+
+TIMEOUT=0 # Default timeout is 0 seconds
+USER_NAME=""
+############################
+while getopts ":t:u:" opt; do
+	case $opt in
+		t)
+			TIMEOUT=$OPTARG
+			if [[ -n "$OPTARG" && "$OPTARG" =~ ^-?[0-9]+$ ]]; then
+				TIMEOUT="$OPTARG"
+				INFO "Custom timeout set: ${TIMEOUT} seconds."
+			else
+				ERR "Invalid timeout time: $OPTARG"
+				usage $0
+			fi
+		;;
+		u)
+			USER_NAME=$OPTARG
+			[ "$(id -u)" == "0" ] && INFO "Should run $0 as user \"$USER_NAME\""
+		;;
+		*)
+			USAGE $0
+		;;
+	esac
+done
+[ "$(id -u)" == "0" ] && {
+	[ -z "$USER_NAME" ] && {
+		ERR "Can not run as root"
+		USAGE $0
+	}
+	# switch user and restart script
+	WRN "Current user is root, switch to user \"$USER_NAME\" and restart script"
+	SCRIPT_PATH="$(realpath "$0")"
+	export TIMEOUT
+	exec su - $USER_NAME -c "$SCRIPT_PATH -t $TIMEOUT"
+	# never reach here
+	exit
+}
+
+# Wait for orbstack be ready
+INFO "Checking orbstack status..."
+
+READY=false
+# force orbstack start
+orbstack_is_ready || {
+	user=$(whoami)
+	WRN "Orbstack not ready, start it..."
+	INFO "$(ssh $user@127.0.0.1 '/opt/homebrew/bin/orbctl start 2>&1')"
+}
+while true;do
+	orbstack_is_ready && {
+		READY=true
+		break
+	}
+	# check if timeout
+	[ $TIMEOUT -ge 0 ] && {
+		#[ "$TIMEOUT" == "0" ] && break
+		[ "$TIMEOUT" -le "$SECONDS" ] && break
+	}
+	sleep 1
+done
+[ $READY == false ] && {
+	ERR "Orbstack not ready within $TIMEOUT seconds"
+	exit 1
+}
+
+INFO "Orbstack is ready"
+exit 0
