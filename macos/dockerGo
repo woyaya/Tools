@@ -1,0 +1,209 @@
+#!/bin/bash
+
+NAME=$(basename $0)
+
+usage(){
+	echo "$0 [script_params] docker_params"
+	echo "script_params: "
+	echo "    -c timeout: waiting for colima ready with 'timeout' seconds"
+	echo "    -C timeout: waiting for colima and docker volume ready with 'timeout' seconds"
+	echo "    -o timeout: waiting for orbstack ready with 'timeout' seconds"
+	echo "    -O timeout: waiting for orbstack and docker volume ready with 'timeout' seconds"
+	echo ""
+	echo "timeout:"
+	echo "    0: don't wait, return immediately"
+	echo "    <0: wait forever"
+	echo "    >0: wait at most 'timeout' seconds"
+	exit 1
+}
+
+# Function to log messages to the system log
+# macOS's logger command by default sends messages to the info level
+# For more granular levels, you can specify priority using the -p option (facility.level)
+log_message() {
+    local level="${1:-info}" # Default level to info if not specified
+    shift
+    local message="$@"
+
+    case "$level" in
+        warn)
+            logger -t "$NAME" -p user.warning "$message"
+            ;;
+        error)
+            logger -t "$NAME" -p user.err "$message" # On macOS, user.err is commonly used for error level
+            ;;
+        info|*)
+            logger -t "$NAME" "$message" # Default to info for unknown levels
+            ;;
+    esac
+    echo "$message"
+    #echo "$message" >>/tmp/$NAME.log
+}
+DBG(){
+	log_message "debug" "$@"
+}
+INFO(){
+	log_message "info" "$@"
+}
+WRN(){
+	log_message "warn" "$@"
+}
+ERR(){
+	log_message "error" "$@"
+}
+
+parse_docker_volume(){
+	local OPTIONS=v:
+	local LONGOPTIONS=volume:
+	local PARSED_OPTIONS
+	PARSED_OPTIONS=$(getopt -o "$OPTIONS" --long "$LONGOPTIONS" --name "$NAME" -- "$@")
+	[ $? -ne 0 ] && return 1
+
+	eval set -- "$PARSED_OPTIONS"
+	while true; do
+	    case "$1" in
+		-v|--volume)
+			echo -n " $2" | sed 's/:.*//'
+			shift 2
+			;;
+		"") # process end
+			break
+			;;
+		*) # Ignore other params
+			shift # 移动到下一个参数
+			;;
+	    esac
+	done
+}
+
+# Function to check if Colima VM is ready
+# Uses 'colima ssh -- docker info' to ensure connection to Colima's Docker daemon
+_colima_is_ready() {
+    local context
+    colima ssh -- docker info > /dev/null 2>&1
+    [ $? != 0 ] && return 1
+    # check docker context for colima ready
+    context=$(docker context ls 2>/dev/null | sed '/colima/!d')
+    [ -z "$context" ] && return 1
+    return 0
+}
+_orbstack_is_ready(){
+    local context
+    # check docker context for orbstack ready
+    context=$(orb status 2>/dev/null | sed '/Running/!d')
+    [ -z "$context" ] && return 1
+    return 0
+}
+vm_is_ready(){
+	local ret
+	ret=0
+	[ "$CHECK_COLIMA" == "true" ] && {
+		_colima_is_ready
+		ret=$?
+	}
+	[ "$CHECK_ORBSTACK" == "true" ] && {
+		_orbstack_is_ready
+		ret=$?
+	}
+	return $ret
+}
+
+volumes_is_ready(){
+	local v
+	[ $# -eq 0 ] && return 0
+	for v in $@;do
+		[[ ! -e "$v" ]] && return 1
+	done
+	return 0
+}
+
+# --- Main script logic starts ---
+INFO "Starting Docker with VM status check..."
+
+# Check if Docker is installed
+if ! command -v docker &> /dev/null; then
+    ERR "Docker is not installed. Please install Docker."
+    # If Docker is not installed, subsequent Colima checks might be pointless, but we continue for completeness.
+    exit 1
+fi
+
+# Check if Colima is installed
+if ! command -v colima &> /dev/null; then
+    ERR "Colima is not installed. Please install Colima."
+    # If Colima is not installed, the Docker runtime environment is incomplete, exiting here.
+    exit 1
+fi
+
+TIMEOUT=0 # Default timeout is 0 seconds
+CHECK_COLIMA="false"
+CHECK_ORBSTACK="false"
+CHECK_VOLUME=0
+# Parse the first two arguments for -T timeout
+if [ "$1" == "-c" -o "$1" == "-C" -o "$1" == '-o' -o "$1" == '-O' ]; then
+	if [[ -n "$2" && "$2" =~ ^-?[0-9]+$ ]]; then
+		TIMEOUT="$2"
+		[ "$1" == "-c" -o "$1" == "-C" ] && {
+			CHECK_COLIMA=true
+			CONTEXT=colima
+		}
+		[ "$1" == "-o" -o "$1" == "-O" ] && {
+			CHECK_ORBSTACK=true
+			CONTEXT=orbstack
+		}
+		[ "$1" == "-C" -o "$1" == "-O" ] && CHECK_VOLUME=true
+		shift 2 # Remove -T and timeout arguments
+		INFO "Check colima: $CHECK_COLIMA, check orbstack: $CHECK_ORBSTACK, check volume: $CHECK_VOLUME, timeout time: ${TIMEOUT} seconds."
+	else
+		ERR "Invalid timeout time: $2"
+		usage $0
+	fi
+else
+	INFO "No custom timeout specified. Defaulting to 0 seconds."
+fi
+
+# Store the remaining Docker command arguments
+DOCKER_ARGS=("$@")
+
+# parse docker volumes
+if [ "$CHECK_VOLUME" = "true" ];then 
+	VOLUMES=$(parse_docker_volume ${DOCKER_ARGS[*]})
+	INFO "Docker volume list: $VOLUMES"
+else
+	VOLUMES="" # default skip volume check
+fi
+
+# Wait for VM to be ready
+INFO "Checking VM status..."
+READY=false
+while true;do
+	#DBG "Check Volume status"
+	volumes_is_ready $VOLUMES && {
+		#DBG "Volume ready, check VM status"
+		vm_is_ready && {
+			INFO "VM and volumes is ready"
+			READY=true
+			break
+		}
+	}
+	# check if timeout
+	[ $TIMEOUT -ge 0 ] && {
+		#[ "$TIMEOUT" == "0" ] && break
+		[ "$TIMEOUT" -le "$SECONDS" ] && break
+	}
+	sleep 1
+done
+[ $READY == false ] && {
+	ERR "VM or volume($VOLUMES) not ready within $TIMEOUT seconds"
+	exit 1
+}
+
+[ -n "$CONTEXT" ] && {
+	INFO "VM and volumes ready, switch context to $CONTEXT"
+	docker context use $CONTEXT || {
+		ERR "Switch docker context to $CONTEXT fail"
+		exit 1
+	}
+}
+INFO "Everything is ready, execute docker with arguments: ${DOCKER_ARGS[*]}"
+exec docker ${DOCKER_ARGS[*]}
+
