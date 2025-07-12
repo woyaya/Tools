@@ -166,13 +166,13 @@ while read LINE; do
 	#check if 'src' end with '/'
 	backslash=`echo "$src" | sed '/\/$/!d'`
 	[ -n "$backslash" ] && RELATIVE="" || RELATIVE="-R"
-	params="-a $RELATIVE $PRESERVE $params $VERBOSE"
+	params="$(rsync_params $RELATIVE $params)"
 	if [ -n "$src_server" ];then
-		src_param="-zzP `atime $src_server` -e ssh"
+		src_param="-zzP -e ssh"
 		dist_param=""
 		mkdir -p $dist
 	elif [ -n "$dist_server" ];then
-		src_param="-zzP `atime $dist_server`"
+		src_param="-zzP "
 		dist_param="-e ssh"
 		check_src $src || {
 			wrn "invalid source: $src"
@@ -185,7 +185,7 @@ while read LINE; do
 			fail="$fail*<$line>: invalid source: $src"
 			continue
 		}
-		src_param="-HA `atime`"
+		src_param=""
 		dist_param=""
 		mkdir -p $dist
 	fi
