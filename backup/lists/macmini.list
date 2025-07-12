@@ -12,7 +12,8 @@
 /etc/pf.conf,/Users/Backup,
 /Users/Datas/dokuwiki/conf/,/Users/Backup/dokuwiki/conf,
 /Users/Datas/dokuwiki/data/,/Users/Backup/dokuwiki/data,--exclude _dummy --exclude cache --exclude deleted.files --exclude dont-panic* --exclude locks --exclude log --exclude tmp
-/Users/kingwoo/Configs/,/Users/Backup/Configs,--exclude *.db* --exclude *.log* --exclude .git --exclude *backup --exclude test --exclude log --exclude tmp --exclude .storage/auth --exclude .storage/core.restore_state --exclude *.swp --exclude Tools
+/Users/kingwoo/Configs/frigate/,/Users/Backup/frigate,--exclude *.db* --exclude *.swp
+/Users/kingwoo/Configs/homeassistant/,/Users/Backup/homeassistant,--exclude *.db* --exclude *.log* --exclude .git --exclude *backup --exclude test --exclude log --exclude tmp --exclude .storage/auth --exclude .storage/core.restore_state --exclude *.swp
 
 /Users/Backup/,/Users/kingwoo/Datas/Backup,
 /Users/Backup/,jdc:/media/AiCard_01/backup/macmini,--rsync-path=/opt/bin/rsync
