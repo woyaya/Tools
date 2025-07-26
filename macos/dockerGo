@@ -127,12 +127,22 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-# Check if Colima is installed
-if ! command -v colima &> /dev/null; then
-    ERR "Colima is not installed. Please install Colima."
-    # If Colima is not installed, the Docker runtime environment is incomplete, exiting here.
-    exit 1
-fi
+[ "$CHECK_COLIMA" == "true" ] && {
+	# Check if Colima is installed
+	if ! command -v colima &> /dev/null; then
+	    ERR "Colima is not installed. Please install Colima."
+	    # If Colima is not installed, the Docker runtime environment is incomplete, exiting here.
+	    exit 1
+	fi
+}
+[ "$CHECK_ORBSTACK" == "true" ] && {
+	# Check if orbstack is installed
+	if ! command -v orb &> /dev/null; then
+	    ERR "Orbstack is not installed. Please install Colima."
+	    # If orbstack is not installed, the Docker runtime environment is incomplete, exiting here.
+	    exit 1
+	fi
+}
 
 TIMEOUT=0 # Default timeout is 0 seconds
 CHECK_COLIMA="false"
