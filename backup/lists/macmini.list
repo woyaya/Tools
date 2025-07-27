@@ -9,6 +9,7 @@
 # [username@server:]source_dir    [username@server:]dist_dir     rsync_params
 /Library/LaunchDaemons,/Users/Backup,
 /opt/homebrew/etc/httpd/,/Users/Backup/etc/httpd,
+/opt/homebrew/etc/mosquitto/,/Users/Backup/etc/mosquitto,--exclude *.example --exclude pwfile
 /etc/pf.conf,/Users/Backup,
 /Users/Datas/dokuwiki/conf/,/Users/Backup/dokuwiki/conf,
 /Users/Datas/dokuwiki/data/,/Users/Backup/dokuwiki/data,--exclude _dummy --exclude cache --exclude deleted.files --exclude dont-panic* --exclude locks --exclude log --exclude tmp
