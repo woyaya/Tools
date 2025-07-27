@@ -155,8 +155,8 @@ while read LINE; do
 		continue
 	}
 	# parse variables
-	src_server=`echo "$src" | sed '/@.*:/!d;s/:.*//'`
-	dist_server=`echo "$dist" | sed '/@.*:/!d;s/:.*//'`
+	src_server=`echo "$src" | sed '/:/!d;/\/.*:/d;s/:.*//'`
+	dist_server=`echo "$dist" | sed '/:/!d;/\/.*:/d;s/:.*//'`
 	[ -n "$src_server" -a -n "$dist_server" ] && {
 		WRN "Cannot both be remote: $src, $dist"
 		FAIL="$FAIL*<$LINE>: Cannot both be remote"
