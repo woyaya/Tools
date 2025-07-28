@@ -56,11 +56,27 @@ atime(){
 	#unmatch version, 'atime' is not supported
 	return 0;
 }
+
+dist_dir_extend(){
+	local exist
+	exist=`echo $1 | sed '/\${.*}/!d'`
+	if [ -z "$exist" ]
+	then
+		echo -n "$1"
+	else
+		eval echo -n "$1"
+	fi
+}
+
 #1: ERR; 2:ERR+WRN; 3:ERR+WRN+INF
 LOG_LEVEL=${LOG_LEVEL:-2}
 LOG2LOGGER=${LOG2LOGGER:-0}
 DEBUG=${DEBUG:-0}
 SCRIPT=()
+export WEEK=$(date +%A)
+export MONTH=$(date +%m)
+export YEAR=$(date +%Y)
+export DATE=$(date +%Y%m%d)
 ############################
 while getopts ":b:l:P:vLD" opt; do
 	case $opt in
@@ -140,10 +156,11 @@ while read LINE; do
 	DBG "Ignor annotation: $line"
 	[ -z "$line" ] && continue
 	src=`echo "$line" | awk -F, '{print $1}' | sed 's/^ *//;s/ *$//'`
-	dist=`echo "$line" | awk -F, '{print $2}' | sed 's/^ *//;s/ *$//'`
+	DIST=`echo "$line" | awk -F, '{print $2}' | sed 's/^ *//;s/ *$//'`
+	dist=`dist_dir_extend "$DIST"`
 	params=`echo "$line" | awk -F, '{print $3}' | sed 's/^ *//;s/ *$//'`
 	check=`echo "$line" | awk -F, '{print $4}'`
-	LOG "src: $src, dist: $dist, Param: $params"
+	LOG "src: $src, dist: $dist($DIST), Param: $params"
 	[ -n "$check" ] && {
 		WRN "Invalid line(Too many comma): $LINE"
 		FAIL="$FAIL*<$LINE>: Too many comma"
@@ -189,15 +206,15 @@ while read LINE; do
 		dist_param=""
 		mkdir -p $dist
 	fi
-	LOG "Backup from $src to $dist with params($params $src_param $dist_param)"
+	LOG "Backup from $src to $dist($DIST) with params($params $src_param $dist_param)"
 	# Backup to local device
 	LOG "rsync $params $src_param $src $dist_param $dist"
 	rsync $params $src_param $src $dist_param $dist
 	if [ $? = 0 ];then
 		SUCC="$SUCC*<$LINE>"
-		INF "Backup $src to $dist success"
+		INF "Backup $src to $dist($DIST) success"
 	else
-		WRN "Backup $src to $dist fail"
+		WRN "Backup $src to $dist($DIST) fail"
 		FAIL="$FAIL*<$LINE>: rsync fail"
 	fi
 done <$LIST
