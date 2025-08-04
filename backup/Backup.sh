@@ -185,11 +185,11 @@ while read LINE; do
 	[ -n "$backslash" ] && RELATIVE="" || RELATIVE="-R"
 	params="$(rsync_params $RELATIVE $params)"
 	if [ -n "$src_server" ];then
-		src_param="-zzP -e ssh"
+		src_param="-zP -e ssh"
 		dist_param=""
 		mkdir -p $dist
 	elif [ -n "$dist_server" ];then
-		src_param="-zzP "
+		src_param="-zP "
 		dist_param="-e ssh"
 		check_src $src || {
 			wrn "invalid source: $src"
