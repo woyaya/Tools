@@ -22,4 +22,5 @@
 /Users/Backup/,/Users/kingwoo/Datas/Backup/${YEAR},
 /Users/Backup/,/Users/kingwoo/Datas/Backup/${MONTH},
 /Users/Backup/,/Users/kingwoo/Datas/Backup/${WEEK},
+/Users/kingwoo/Datas/Backup/,/Users/kingwoo/Datas/Share/Backup/Macmini,
 /Users/kingwoo/Datas/Backup/,jdc:/media/AiCard_01/Backup/Macmini/,--rsync-path=/opt/bin/rsync
