@@ -1,0 +1,44 @@
+# [username@server:]source_dir    [username@server:]dist_dir     rsync_params
+# username@server: user name and server address
+# source_dir: source dir at source server(or local machine if "username@server" is not set
+#	if "source_dir" end with '/': sync with context of source_dir only.
+#	if "source_dir" end without '/': sync with source path and context of the source_dir
+# dist_dir: dist dir
+# 	The dist dir is allowed to contain the following variables: 
+# 		${YEAR}, ${MONTH}, ${WEEK}, ${DATE}
+# 	Including other characters containing '$' may cause errors
+# rsync_params: additional parameters of rsync
+
+# [username@server:]source_dir    [username@server:]dist_dir     rsync_params
+/etc/apache2,/home/share/Backup/GeminiM,
+/etc/docker,/home/share/Backup/GeminiM,
+/etc/mosquitto,/home/share/Backup/GeminiM,
+/etc/network,/home/share/Backup/GeminiM,
+/etc/samba,/home/share/Backup/GeminiM,
+/etc/ssh,/home/share/Backup/GeminiM,
+/etc/systemd,/home/share/Backup/GeminiM,
+/etc/vim,/home/share/Backup/GeminiM,
+/etc/smartdns,/home/share/Backup/GeminiM,
+/etc/haproxy,/home/share/Backup/GeminiM,
+/etc/openvpn,/home/share/Backup/GeminiM,
+/home/kingwoo/.bash_aliases,/home/share/Backup/GeminiM,
+/home/kingwoo/.gitconfig,/home/share/Backup/GeminiM,
+/home/kingwoo/.tmux.conf,/home/share/Backup/GeminiM,
+/home/kingwoo/.ssh/config,/home/share/Backup/GeminiM,
+/home/kingwoo/.vimrc,/home/share/Backup/GeminiM,
+/home/kingwoo/.vim,/home/share/Backup/GeminiM,--exclude autoload --exclude plugged --exclude plugin --exclude doc
+/home/www/dokuwiki/conf,/home/share/Backup/GeminiM,
+/home/www/dokuwiki/data/pages,/home/share/Backup/GeminiM,
+/home/www/dokuwiki/data/attic,/home/share/Backup/GeminiM,--exclude _dummy
+/home/www/dokuwiki/data/media*,/home/share/Backup/GeminiM,--exclude _dummy
+/home/www/dokuwiki/data/meta,/home/share/Backup/GeminiM,--exclude _dummy
+/home/homeassistant/esphome/*.yaml,/home/share/Backup/GeminiM,
+/home/homeassistant/esphome/SRC,/home/share/Backup/GeminiM,
+/home/homeassistant/hassio,/home/share/Backup/GeminiM,--exclude *.db* --exclude *.log* --exclude .git --exclude *backup --exclude test --exclude log --exclude tmp --exclude .storage/auth --exclude .storage/core.restore_state
+/home/share/Backup/GeminiM/,/home/Backup/GeminiM,
+
+# Backup to other devices
+/home/share/Backup/GeminiM/,jdc:/media/AiCard_01/Backup/GeminiM,--rsync-path=/opt/bin/rsync
+# Backup from other devices
+jdc:/media/AiCard_01/Backup/,/home/share/Backup/,--rsync-path=/opt/bin/rsync
+
