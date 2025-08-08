@@ -40,6 +40,6 @@
 # Backup to other devices
 /home/share/Backup/GeminiM/,jdc:/media/AiCard_01/Backup/GeminiM,--rsync-path=/opt/bin/rsync
 # Backup from other devices
-jdc:/media/AiCard_01/Backup/,/home/share/Backup/,--rsync-path=/opt/bin/rsync
+jdc:/media/AiCard_01/Backup/,/home/share/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14
 macmini:/Users/kingwoo/Datas/Share/,/home/share/,
 
