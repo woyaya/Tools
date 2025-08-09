@@ -27,4 +27,4 @@
 #Backup to other devices
 /Users/kingwoo/Datas/Backup/,jdc:/media/AiCard_01/Backup/Macmini/,--rsync-path=/opt/bin/rsync
 #Backup from other devices
-jdc:/media/AiCard_01/Backup/,/Users/kingwoo/Datas/Share/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14
+jdc:/media/AiCard_01/Backup/,/Users/kingwoo/Datas/Share/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14 --exclude=Macmini
