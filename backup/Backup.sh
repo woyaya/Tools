@@ -192,13 +192,13 @@ while read LINE; do
 		src_param="-zP "
 		dist_param="-e ssh"
 		check_src $src || {
-			wrn "invalid source: $src"
+			WRN "invalid source: $src"
 			fail="$fail*<$line>: invalid source: $src"
 			continue
 		}
 	else
 		check_src $src || {
-			wrn "invalid source: $src"
+			WRN "invalid source: $src"
 			fail="$fail*<$line>: invalid source: $src"
 			continue
 		}
