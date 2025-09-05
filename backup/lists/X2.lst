@@ -1,0 +1,46 @@
+# [username@server:]source_dir    [username@server:]dist_dir     rsync_params
+# username@server: user name and server address
+# source_dir: source dir at source server(or local machine if "username@server" is not set
+#	if "source_dir" end with '/': sync with context of source_dir only.
+#	if "source_dir" end without '/': sync with source path and context of the source_dir
+# dist_dir: dist dir
+# 	The dist dir is allowed to contain the following variables: 
+# 		${YEAR}, ${MONTH}, ${WEEK}, ${DATE}
+# 	Including other characters containing '$' may cause errors
+# rsync_params: additional parameters of rsync
+
+# [username@server:]source_dir    [username@server:]dist_dir     rsync_params
+/etc/apache2,/home/Backup,
+/etc/docker,/home/Backup,
+/etc/mosquitto,/home/Backup,
+/etc/network,/home/Backup,
+#/etc/samba,/home/Backup,
+/etc/ssh,/home/Backup,
+/etc/systemd,/home/Backup,
+/etc/vim,/home/Backup,
+/etc/smartdns,/home/Backup,
+#/etc/haproxy,/home/Backup,
+/etc/openvpn,/home/Backup,
+/home/kingwoo/.bash_aliases,/home/Backup,
+/home/kingwoo/.gitconfig,/home/Backup,
+/home/kingwoo/.tmux.conf,/home/Backup,
+/home/kingwoo/.ssh/config,/home/Backup,
+/home/kingwoo/.vimrc,/home/Backup,
+/home/kingwoo/.vim,/home/Backup,--exclude autoload --exclude plugged --exclude plugin --exclude doc
+#/home/www/dokuwiki/conf,/home/Backup,
+#/home/www/dokuwiki/data/pages,/home/Backup,
+#/home/www/dokuwiki/data/attic,/home/Backup,--exclude _dummy
+#/home/www/dokuwiki/data/media*,/home/Backup,--exclude _dummy
+#/home/www/dokuwiki/data/meta,/home/Backup,--exclude _dummy
+/home/homeassistant/.homeassistant/,/home/Backup/homeassistant,--exclude *.db* --exclude *.log* --exclude .git --exclude *backup --exclude test --exclude log --exclude tmp --exclude .storage/auth --exclude .storage/core.restore_state
+/home/share/Data/git/esphome-configs/,/home/Backup/esphome,--exclude build --exclude .git --exclude .esphome --exclude .git --exclude *.swp
+
+# Backup to harddisk
+/home/Backup/,/home/share/Backup/X2/${YEAR},
+/home/Backup/,/home/share/Backup/X2/${MONTH},
+/home/Backup/,/home/share/Backup/X2/${WEEK},
+
+# Backup to other devices
+/home/share/Backup/X2/,jdc:/media/AiCard_01/Backup/X2,--rsync-path=/opt/bin/rsync
+# Backup from other devices
+jdc:/media/AiCard_01/Backup/,/home/share/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14 --exclude=X2

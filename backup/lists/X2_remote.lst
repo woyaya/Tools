@@ -1,0 +1,13 @@
+# [username@server:]source_dir    [username@server:]dist_dir     rsync_params
+# username@server: user name and server address
+# source_dir: source dir at source server(or local machine if "username@server" is not set
+#	if "source_dir" end with '/': sync with context of source_dir only.
+#	if "source_dir" end without '/': sync with source path and context of the source_dir
+# dist_dir: dist dir
+# 	The dist dir is allowed to contain the following variables: 
+# 		${YEAR}, ${MONTH}, ${WEEK}, ${DATE}
+# 	Including other characters containing '$' may cause errors
+# rsync_params: additional parameters of rsync
+
+# [username@server:]source_dir    [username@server:]dist_dir     rsync_params
+macmini:/Users/kingwoo/Datas/Share/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas
