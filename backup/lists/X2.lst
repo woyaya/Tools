@@ -33,7 +33,7 @@
 #/home/www/dokuwiki/data/media*,/home/Backup,--exclude _dummy
 #/home/www/dokuwiki/data/meta,/home/Backup,--exclude _dummy
 /home/homeassistant/.homeassistant/,/home/Backup/homeassistant,--exclude *.db* --exclude *.log* --exclude .git --exclude *backup --exclude test --exclude log --exclude tmp --exclude .storage/auth --exclude .storage/core.restore_state
-/home/share/Data/git/esphome-configs/,/home/Backup/esphome,--exclude build --exclude .git --exclude .esphome --exclude .git --exclude *.swp
+/home/kingwoo/git/esphome-configs/,/home/Backup/esphome,--exclude build --exclude .git --exclude .esphome --exclude .git --exclude *.swp
 
 # Backup to harddisk
 /home/Backup/,/home/share/Backup/X2/${YEAR},
