@@ -12,6 +12,5 @@
 # [username@server:]source_dir    [username@server:]dist_dir     rsync_params
 
 # Backup from other devices
-#jdc:/media/AiCard_01/Backup/,/home/Backup/MasterHDD/Backup/,
-#gemini:/home/share/,/home/Backup/MasterHDD/,
-macmini:/Users/kingwoo/Datas/Share/,/home/Backup/MasterHDD/,
+jdc:/media/AiCard_01/Backup/,/home/Backup/MasterHDD/Backup/,
+macmini:/Users/kingwoo/Datas/Share/,/home/Backup/MasterHDD/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas
