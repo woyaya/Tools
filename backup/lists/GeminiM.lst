@@ -41,5 +41,5 @@
 /home/share/Backup/GeminiM/,jdc:/media/AiCard_01/Backup/GeminiM,--rsync-path=/opt/bin/rsync
 # Backup from other devices
 jdc:/media/AiCard_01/Backup/,/home/share/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14 --exclude=GeminiM
-macmini:/Users/kingwoo/Datas/Share/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas
+macmini:/Users/kingwoo/ExternalDisk/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas
 
