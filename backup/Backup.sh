@@ -3,6 +3,7 @@
 ############################
 USAGE(){
 	echo "Usage: $1 [params]"
+	echo "     -u: update self before any action"
 	echo "     -b BASE: base dir, where to find configs and functions. default: ./"
 	echo "     -l list_file: read list from this file. default: backup.lst"
 	echo "     -P script: script to be executed after config generated"
@@ -71,6 +72,7 @@ dist_dir_extend(){
 #1: ERR; 2:ERR+WRN; 3:ERR+WRN+INF
 LOG_LEVEL=${LOG_LEVEL:-2}
 LOG2LOGGER=${LOG2LOGGER:-0}
+UPDATE=${UPDATE:-0}
 DEBUG=${DEBUG:-0}
 SCRIPT=()
 export WEEK=$(date +%A)
@@ -78,7 +80,7 @@ export MONTH=$(date +%m)
 export YEAR=$(date +%Y)
 export DATE=$(date +%Y%m%d)
 ############################
-while getopts ":b:l:P:vLD" opt; do
+while getopts ":b:l:P:uvLD" opt; do
 	case $opt in
 		b)
 			BASE=$OPTARG
@@ -88,6 +90,9 @@ while getopts ":b:l:P:vLD" opt; do
 		;;
 		P)
 			SCRIPT+=("$OPTARG")
+		;;
+		u)
+			UPDATE=1
 		;;
 		v)
 			LOG_LEVEL=$((LOG_LEVEL+1))
@@ -126,6 +131,13 @@ COMMON=$BASE/common.sh
 }
 export COMMON
 . $COMMON
+
+[ "$UPDATE" = "1" ] && {
+	_PWD=$(pwd)
+	INF "Update $BASE before actions"
+	cd $BASE && git pull 2>/dev/null
+	cd $_PWD
+}
 
 LIST_DIR=${BASE}/lists
 list=${LIST:-backup.lst}
