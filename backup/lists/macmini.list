@@ -19,12 +19,11 @@
 /Users/kingwoo/Configs/frigate/,/Users/Backup/frigate,--exclude *.db* --exclude *.swp
 /Users/kingwoo/Configs/homeassistant/,/Users/Backup/homeassistant,--exclude *.db* --exclude *.log* --exclude .git --exclude *backup --exclude test --exclude log --exclude tmp --exclude .storage/auth --exclude .storage/core.restore_state --exclude *.swp
 
-/Users/Backup/,/Users/kingwoo/Datas/Backup/${YEAR},
-/Users/Backup/,/Users/kingwoo/Datas/Backup/${MONTH},
-/Users/Backup/,/Users/kingwoo/Datas/Backup/${WEEK},
-/Users/kingwoo/Datas/Backup/,/Users/kingwoo/ExternalDisk/Backup/${HOST},
+/Users/Backup/,/Users/kingwoo/ExternalDisk/Backup/${HOST}/${YEAR},
+/Users/Backup/,/Users/kingwoo/ExternalDisk/Backup/${HOST}/${MONTH},
+/Users/Backup/,/Users/kingwoo/ExternalDisk/Backup/${HOST}/${WEEK},
 
 #Backup to other devices
-/Users/kingwoo/Datas/Backup/,jdc:/media/AiCard_01/Backup/${HOST}/,--rsync-path=/opt/bin/rsync
+/Users/kingwoo/Datas/Backup/${HOST}/,jdc:/media/AiCard_01/Backup/${HOST}/,--rsync-path=/opt/bin/rsync
 #Backup from other devices
 jdc:/media/AiCard_01/Backup/,/Users/kingwoo/ExternalDisk/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14 --exclude=${HOST}
