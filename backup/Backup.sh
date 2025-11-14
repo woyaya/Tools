@@ -1,11 +1,12 @@
 #!/bin/bash
+HOST=`hostname -s`
 #Functions
 ############################
 USAGE(){
 	echo "Usage: $1 [params]"
 	echo "     -u: update self before any action"
 	echo "     -b BASE: base dir, where to find configs and functions. default: ./"
-	echo "     -l list_file: read list from this file. default: backup.lst"
+	echo "     -l list_file: read list from this file. default: $HOST.lst"
 	echo "     -P script: script to be executed after config generated"
 	echo "     -v: more verbose output"
 	echo "     -L: log to logger"
@@ -75,6 +76,7 @@ LOG2LOGGER=${LOG2LOGGER:-0}
 UPDATE=${UPDATE:-0}
 DEBUG=${DEBUG:-0}
 SCRIPT=()
+export HOST
 export WEEK=$(date +%A)
 export MONTH=$(date +%m)
 export YEAR=$(date +%Y)
@@ -140,7 +142,13 @@ export COMMON
 }
 
 LIST_DIR=${BASE}/lists
-list=${LIST:-backup.lst}
+if [ -z "$LIST" ]
+then
+	WRN "No list file was specified; the default value is set to $HOST.lst."
+	list=$HOST.lst
+else
+	list="$LIST"
+fi
 LIST=$list
 [ ! -f $LIST ] && LIST=$LIST_DIR/$list
 [ ! -f $LIST ] && LIST=$BASE/$list

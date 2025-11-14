@@ -5,7 +5,7 @@
 #	if "source_dir" end without '/': sync with source path and context of the source_dir
 # dist_dir: dist dir
 # 	The dist dir is allowed to contain the following variables: 
-# 		${YEAR}, ${MONTH}, ${WEEK}, ${DATE}
+# 		${YEAR}, ${MONTH}, ${WEEK}, ${DATE}, ${HOST}
 # 	Including other characters containing '$' may cause errors
 # rsync_params: additional parameters of rsync
 
@@ -36,11 +36,11 @@
 /home/kingwoo/git/esphome-configs/,/home/Backup/esphome,--exclude build --exclude .git --exclude .esphome --exclude .git --exclude *.swp
 
 # Backup to harddisk
-/home/Backup/,/home/share/Backup/X2/${YEAR},
-/home/Backup/,/home/share/Backup/X2/${MONTH},
-/home/Backup/,/home/share/Backup/X2/${WEEK},
+/home/Backup/,/home/share/Backup/${HOST}/${YEAR},
+/home/Backup/,/home/share/Backup/${HOST}/${MONTH},
+/home/Backup/,/home/share/Backup/${HOST}/${WEEK},
 
 # Backup to other devices
-/home/share/Backup/X2/,jdc:/media/AiCard_01/Backup/X2,--rsync-path=/opt/bin/rsync
+/home/share/Backup/${HOST}/,jdc:/media/AiCard_01/Backup/${HOST},--rsync-path=/opt/bin/rsync
 # Backup from other devices
-jdc:/media/AiCard_01/Backup/,/home/share/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14 --exclude=X2
+jdc:/media/AiCard_01/Backup/,/home/share/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14 --exclude=${HOST}

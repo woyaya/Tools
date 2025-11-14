@@ -5,7 +5,7 @@
 #	if "source_dir" end without '/': sync with source path and context of the source_dir
 # dist_dir: dist dir
 # 	The dist dir is allowed to contain the following variables: 
-# 		${YEAR}, ${MONTH}, ${WEEK}, ${DATE}
+# 		${YEAR}, ${MONTH}, ${WEEK}, ${DATE}, ${HOST}
 # 	Including other characters containing '$' may cause errors
 # rsync_params: additional parameters of rsync
 

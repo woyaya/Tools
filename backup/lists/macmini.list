@@ -5,7 +5,7 @@
 #	if "source_dir" end without '/': sync with source path and context of the source_dir
 # dist_dir: dist dir
 # 	The dist dir is allowed to contain the following variables: 
-# 		${YEAR}, ${MONTH}, ${WEEK}, ${DATE}
+# 		${YEAR}, ${MONTH}, ${WEEK}, ${DATE}, ${HOST}
 # 	Including other characters containing '$' may cause errors
 # rsync_params: additional parameters of rsync
 
@@ -22,9 +22,9 @@
 /Users/Backup/,/Users/kingwoo/Datas/Backup/${YEAR},
 /Users/Backup/,/Users/kingwoo/Datas/Backup/${MONTH},
 /Users/Backup/,/Users/kingwoo/Datas/Backup/${WEEK},
-/Users/kingwoo/Datas/Backup/,/Users/kingwoo/ExternalDisk/Backup/Macmini,
+/Users/kingwoo/Datas/Backup/,/Users/kingwoo/ExternalDisk/Backup/${HOST},
 
 #Backup to other devices
-/Users/kingwoo/Datas/Backup/,jdc:/media/AiCard_01/Backup/Macmini/,--rsync-path=/opt/bin/rsync
+/Users/kingwoo/Datas/Backup/,jdc:/media/AiCard_01/Backup/${HOST}/,--rsync-path=/opt/bin/rsync
 #Backup from other devices
-jdc:/media/AiCard_01/Backup/,/Users/kingwoo/ExternalDisk/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14 --exclude=Macmini
+jdc:/media/AiCard_01/Backup/,/Users/kingwoo/ExternalDisk/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14 --exclude=${HOST}
