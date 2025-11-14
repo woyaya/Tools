@@ -175,12 +175,13 @@ while read LINE; do
 	line=`echo "$LINE" | sed 's/^ *//;/^#/d'`
 	DBG "Ignor annotation: $line"
 	[ -z "$line" ] && continue
-	src=`echo "$line" | awk -F, '{print $1}' | sed 's/^ *//;s/ *$//'`
+	SRC=`echo "$line" | awk -F, '{print $1}' | sed 's/^ *//;s/ *$//'`
 	DIST=`echo "$line" | awk -F, '{print $2}' | sed 's/^ *//;s/ *$//'`
+	src=`dist_dir_extend "$SRC"`
 	dist=`dist_dir_extend "$DIST"`
 	params=`echo "$line" | awk -F, '{print $3}' | sed 's/^ *//;s/ *$//'`
 	check=`echo "$line" | awk -F, '{print $4}'`
-	LOG "src: $src, dist: $dist($DIST), Param: $params"
+	LOG "src: $src($SRC), dist: $dist($DIST), Param: $params"
 	[ -n "$check" ] && {
 		WRN "Invalid line(Too many comma): $LINE"
 		FAIL="$FAIL*<$LINE>: Too many comma"
@@ -226,15 +227,15 @@ while read LINE; do
 		dist_param=""
 		mkdir -p $dist
 	fi
-	LOG "Backup from $src to $dist($DIST) with params($params $src_param $dist_param)"
+	LOG "Backup from $src($SRC) to $dist($DIST) with params($params $src_param $dist_param)"
 	# Backup to local device
 	LOG "rsync $params $src_param $src $dist_param $dist"
 	rsync $params $src_param $src $dist_param $dist
 	if [ $? = 0 ];then
 		SUCC="$SUCC*<$LINE>"
-		INF "Backup $src to $dist($DIST) success"
+		INF "Backup $src($SRC) to $dist($DIST) success"
 	else
-		WRN "Backup $src to $dist($DIST) fail"
+		WRN "Backup $src($SRC) to $dist($DIST) fail"
 		FAIL="$FAIL*<$LINE>: rsync fail"
 	fi
 done <$LIST
