@@ -24,6 +24,6 @@
 /Users/Backup/,/Users/kingwoo/ExternalDisk/Backup/${HOST}/${WEEK},
 
 #Backup to other devices
-/Users/kingwoo/Datas/Backup/${HOST}/,oect:/home/share/Backup/${HOST}/,
+/Users/kingwoo/ExternalDisk/Backup/${HOST}/,oect:/home/share/Backup/${HOST}/,
 #Backup from other devices
 oect:/home/share/Backup/,/Users/kingwoo/ExternalDisk/Backup/,--exclude=LenovoT14 --exclude=${HOST}
