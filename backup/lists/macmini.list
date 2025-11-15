@@ -24,6 +24,6 @@
 /Users/Backup/,/Users/kingwoo/ExternalDisk/Backup/${HOST}/${WEEK},
 
 #Backup to other devices
-/Users/kingwoo/Datas/Backup/${HOST}/,jdc:/media/AiCard_01/Backup/${HOST}/,--rsync-path=/opt/bin/rsync
+/Users/kingwoo/Datas/Backup/${HOST}/,oect:/home/share/Backup/${HOST}/,
 #Backup from other devices
-jdc:/media/AiCard_01/Backup/,/Users/kingwoo/ExternalDisk/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14 --exclude=${HOST}
+oect:/home/share/Backup/,/Users/kingwoo/ExternalDisk/Backup/,--exclude=LenovoT14 --exclude=${HOST}

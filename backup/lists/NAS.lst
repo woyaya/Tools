@@ -12,5 +12,5 @@
 # [username@server:]source_dir    [username@server:]dist_dir     rsync_params
 
 # Backup from other devices
-jdc:/media/AiCard_01/Backup/,/home/Backup/MasterHDD/Backup/,--rsync-path=/opt/bin/rsync
-macmini:/Users/kingwoo/ExternalDisk/,/home/Backup/MasterHDD/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas
+oect:/home/share/Backup/,/home/Backup/MasterHDD/Backup/,
+macmini:/Users/kingwoo/ExternalDisk/,/home/Backup/MasterHDD/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas --exclude Backup

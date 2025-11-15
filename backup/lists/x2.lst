@@ -41,6 +41,8 @@
 /home/Backup/,/home/share/Backup/${HOST}/${WEEK},
 
 # Backup to other devices
-/home/share/Backup/${HOST}/,jdc:/media/AiCard_01/Backup/${HOST},--rsync-path=/opt/bin/rsync
+/home/share/Backup/${HOST}/,oect:/home/share/Backup/${HOST},
 # Backup from other devices
-jdc:/media/AiCard_01/Backup/,/home/share/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14 --exclude=${HOST}
+oect:/home/share/Backup/,/home/share/Backup/,--exclude=LenovoT14 --exclude=${HOST}
+
+/home/share/Backup/,jdc:/media/AiCard_01/Backup/,--rsync-path=/opt/bin/rsync

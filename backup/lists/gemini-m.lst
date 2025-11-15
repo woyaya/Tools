@@ -10,36 +10,36 @@
 # rsync_params: additional parameters of rsync
 
 # [username@server:]source_dir    [username@server:]dist_dir     rsync_params
-/etc/apache2,/home/share/Backup/GeminiM,
-/etc/docker,/home/share/Backup/GeminiM,
-/etc/mosquitto,/home/share/Backup/GeminiM,
-/etc/network,/home/share/Backup/GeminiM,
-/etc/samba,/home/share/Backup/GeminiM,
-/etc/ssh,/home/share/Backup/GeminiM,
-/etc/systemd,/home/share/Backup/GeminiM,
-/etc/vim,/home/share/Backup/GeminiM,
-/etc/smartdns,/home/share/Backup/GeminiM,
-/etc/haproxy,/home/share/Backup/GeminiM,
-/etc/openvpn,/home/share/Backup/GeminiM,
-/home/kingwoo/.bash_aliases,/home/share/Backup/GeminiM,
-/home/kingwoo/.gitconfig,/home/share/Backup/GeminiM,
-/home/kingwoo/.tmux.conf,/home/share/Backup/GeminiM,
-/home/kingwoo/.ssh/config,/home/share/Backup/GeminiM,
-/home/kingwoo/.vimrc,/home/share/Backup/GeminiM,
-/home/kingwoo/.vim,/home/share/Backup/GeminiM,--exclude autoload --exclude plugged --exclude plugin --exclude doc
-/home/www/dokuwiki/conf,/home/share/Backup/GeminiM,
-/home/www/dokuwiki/data/pages,/home/share/Backup/GeminiM,
-/home/www/dokuwiki/data/attic,/home/share/Backup/GeminiM,--exclude _dummy
-/home/www/dokuwiki/data/media*,/home/share/Backup/GeminiM,--exclude _dummy
-/home/www/dokuwiki/data/meta,/home/share/Backup/GeminiM,--exclude _dummy
-/home/homeassistant/esphome/*.yaml,/home/share/Backup/GeminiM,
-/home/homeassistant/esphome/SRC,/home/share/Backup/GeminiM,
-/home/homeassistant/hassio,/home/share/Backup/GeminiM,--exclude *.db* --exclude *.log* --exclude .git --exclude *backup --exclude test --exclude log --exclude tmp --exclude .storage/auth --exclude .storage/core.restore_state
-/home/share/Backup/GeminiM/,/home/Backup/GeminiM,
+/etc/apache2,/home/Backup,
+/etc/docker,/home/Backup,
+/etc/mosquitto,/home/Backup,
+/etc/network,/home/Backup,
+#/etc/samba,/home/Backup,
+/etc/ssh,/home/Backup,
+/etc/systemd,/home/Backup,
+/etc/vim,/home/Backup,
+/etc/smartdns,/home/Backup,
+#/etc/haproxy,/home/Backup,
+/etc/openvpn,/home/Backup,
+/home/kingwoo/.bash_aliases,/home/Backup,
+/home/kingwoo/.gitconfig,/home/Backup,
+/home/kingwoo/.tmux.conf,/home/Backup,
+/home/kingwoo/.ssh/config,/home/Backup,
+/home/kingwoo/.vimrc,/home/Backup,
+/home/kingwoo/.vim,/home/Backup,--exclude autoload --exclude plugged --exclude plugin --exclude doc
+/home/www/dokuwiki/conf/,/home/Backup/dokuwiki/conf,
+/home/www/dokuwiki/data/,/home/Backup/dokuwiki/data,--exclude _dummy --exclude cache --exclude deleted.files --exclude dont-panic* --exclude locks --exclude log --exclude tmp
+/home/homeassistant/esphome/,/home/Backup/esphome,--exclude build --exclude .git --exclude .esphome --exclude .git --exclude *.swp
+/home/homeassistant/hassio/homeassistant/,/home/Backup/homeassistant,--exclude *.db* --exclude *.log* --exclude .git --exclude *backup --exclude test --exclude log --exclude tmp --exclude .storage/auth --exclude .storage/core.restore_state
+
+# Backup to harddisk
+/home/Backup/,/home/share/Backup/${HOST}/${YEAR},
+/home/Backup/,/home/share/Backup/${HOST}/${MONTH},
+/home/Backup/,/home/share/Backup/${HOST}/${WEEK},
 
 # Backup to other devices
-/home/share/Backup/GeminiM/,jdc:/media/AiCard_01/Backup/GeminiM,--rsync-path=/opt/bin/rsync
+/home/share/Backup/${HOST}/,oect:/home/share/Backup/${HOST}/,
 # Backup from other devices
-jdc:/media/AiCard_01/Backup/,/home/share/Backup/,--rsync-path=/opt/bin/rsync --exclude=LenovoT14 --exclude=GeminiM
-macmini:/Users/kingwoo/ExternalDisk/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas
+oect:/home/share/Backup/,/home/share/Backup/,--exclude=LenovoT14 --exclude=${HOST}
+#macmini:/Users/kingwoo/ExternalDisk/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas --exclude Backup
 

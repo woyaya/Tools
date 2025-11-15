@@ -13,5 +13,5 @@
 
 #Backup to other devices
 #Backup from other devices
-jdc:/media/AiCard_01/Backup/,/home/share/Backup/,--rsync-path=/opt/bin/rsync
-macmini:/Users/kingwoo/ExternalDisk/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas
+#oect:/home/share/Backup/,/home/share/Backup/,
+#macmini:/Users/kingwoo/ExternalDisk/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas --exclude Backup
