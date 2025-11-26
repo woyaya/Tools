@@ -14,4 +14,6 @@
 #Backup to other devices
 #Backup from other devices
 #oect:/home/share/Backup/,/home/share/Backup/,
+x2:/home/share/Backup/,/home/share/Backup/,
+x2:/home/share/Music/,/home/share/Music/,--checksum
 #macmini:/Users/kingwoo/ExternalDisk/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas --exclude Backup
