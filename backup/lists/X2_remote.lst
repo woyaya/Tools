@@ -10,4 +10,4 @@
 # rsync_params: additional parameters of rsync
 
 # [username@server:]source_dir    [username@server:]dist_dir     rsync_params
-macmini:/Users/kingwoo/ExternalDisk/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas
+macmini:/Users/kingwoo/ExternalDisk/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas --exclude .fseventsd --exclude .??*

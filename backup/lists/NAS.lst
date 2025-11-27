@@ -13,4 +13,4 @@
 
 # Backup from other devices
 oect:/home/share/Backup/,/home/Backup/MasterHDD/Backup/,
-macmini:/Users/kingwoo/ExternalDisk/,/home/Backup/MasterHDD/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas --exclude Backup
+macmini:/Users/kingwoo/ExternalDisk/,/home/Backup/MasterHDD/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas --exclude .fseventsd --exclude .??* --exclude Backup
