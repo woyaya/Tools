@@ -42,7 +42,9 @@
 
 # Backup to other devices
 /home/share/Backup/${HOST}/,oect:/home/share/Backup/${HOST},
+/home/share/Backup/${HOST}/,n1:/home/share/Backup/${HOST},
 # Backup from other devices
-oect:/home/share/Backup/,/home/share/Backup/,--exclude=LenovoT14 --exclude=${HOST}
+n1:/home/share/Backup/,/home/share/Backup/,--exclude=LenovoT14 --exclude=${HOST}
 
 /home/share/Backup/,jdc:/media/AiCard_01/Backup/,--rsync-path=/opt/bin/rsync
+n1:/home/share/Music/,/home/share/Music/,--checksum
