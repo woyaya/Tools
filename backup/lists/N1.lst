@@ -5,12 +5,19 @@
 #	if "source_dir" end without '/': sync with source path and context of the source_dir
 # dist_dir: dist dir
 # 	The dist dir is allowed to contain the following variables: 
-# 		${YEAR}, ${MONTH}, ${WEEK}, ${DATE}
+# 		${YEAR}, ${MONTH}, ${WEEK}, ${DATE}, ${HOST}
 # 	Including other characters containing '$' may cause errors
 # rsync_params: additional parameters of rsync
 
 # [username@server:]source_dir    [username@server:]dist_dir     rsync_params
-
+/etc/network/interfaces,/home/Backup,
+/etc/NetworkManager/dispatcher.d/99-eth-wlan-switcher,/home/Backup,
+# Backup to harddisk
+/home/Backup/,/home/share/Backup/${HOST}/${YEAR},
+/home/Backup/,/home/share/Backup/${HOST}/${MONTH},
+/home/Backup/,/home/share/Backup/${HOST}/${WEEK},
 #Backup to other devices
+/home/share/Backup/${HOST}/,oect:/home/share/Backup/${HOST},
+/home/share/Backup/${HOST}/,macmini:/Users/kingwoo/ExternalDisk/Backup/${HOST},
 #Backup from other devices
 macmini:/Users/kingwoo/ExternalDisk/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas --exclude .fseventsd --exclude .??*
