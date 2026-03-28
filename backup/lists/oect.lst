@@ -42,3 +42,4 @@
 
 # Backup to other devices
 # Backup from other devices
+macmini:/Users/kingwoo/ExternalDisk/Music/,/home/share/Music/,--exclude lost* --exclude .fseventsd --exclude .DS_Store --exclude '.??*'
