@@ -20,4 +20,4 @@
 /home/share/Backup/${HOST}/,oect:/home/share/Backup/${HOST},
 /home/share/Backup/${HOST}/,macmini:/Users/kingwoo/ExternalDisk/Backup/${HOST},
 #Backup from other devices
-macmini:/Users/kingwoo/ExternalDisk/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas --exclude .fseventsd  --exclude .DS_Store --exclude '.??*'
+macmini:/Users/kingwoo/ExternalDisk/,/home/share/,--exclude temp --exclude lost* --exclude Download --exclude LocalDatas --exclude .fseventsd  --exclude .DS_Store --exclude '.??*' --exclude Music
