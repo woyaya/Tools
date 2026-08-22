@@ -12,6 +12,9 @@
 # [username@server:]source_dir    [username@server:]dist_dir     rsync_params
 /Library/LaunchDaemons,/Users/Backup,
 /opt/homebrew/etc/httpd/,/Users/Backup/etc/httpd,
+/opt/homebrew/etc/dnsmasq.d/,/Users/Backup/etc/dnsmasq,
+/opt/homebrew/etc/dnsmasq.conf,/Users/Backup/etc/dnsmasq,
+/opt/homebrew/etc/smartdns/,/Users/Backup/etc/smartdns,
 /opt/homebrew/etc/mosquitto/,/Users/Backup/etc/mosquitto,--exclude *.example --exclude pwfile
 /etc/pf.conf,/Users/Backup,
 /Users/Datas/dokuwiki/conf/,/Users/Backup/dokuwiki/conf,
